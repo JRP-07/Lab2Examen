@@ -1,5 +1,6 @@
 package examen;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Biblioteca {
@@ -76,6 +77,37 @@ public class Biblioteca {
         }
         resultado.addAll(buscarDisponiblesDeAutor(autor, indice + 1));
         return resultado;
+    }
+
+    public Prestamo prestar(String idUsuario, String codigo) throws BibliotecaException {
+        Usuario usuario = buscarUsuarioPorId(idUsuario);
+        if (usuario == null) {
+            throw new BibliotecaException("No existe un usuario con id " + idUsuario);
+        }
+        Material material = buscarPorCodigo(codigo, 0);
+        if (material == null) {
+            throw new BibliotecaException("No existe un material con codigo " + codigo);
+        }
+        if (!material.estaDisponible()) {
+            throw new MaterialNoDisponibleException("El material " + material.getTitulo() + " ya esta prestado");
+        }
+        LocalDate hoy = LocalDate.now();
+        if (usuario.estaPenalizado(hoy)) {
+            throw new UsuarioPenalizadoException(usuario.getNombre() + " esta penalizado hasta " + usuario.getPenalizadoHasta());
+        }
+        if (usuario.getPrestados().size() >= usuario.getLimitePrestamos()) {
+            throw new LimitePrestamosException(usuario.getNombre() + " alcanzo su limite de " + usuario.getLimitePrestamos() + " prestamos");
+        }
+        if (!usuario.puedeAccederNivel(material.getNivel())) {
+            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivel());
+        }
+
+        material.prestar();
+        usuario.getPrestados().add(material);
+        LocalDate fechaPrevista = hoy.plusDays(material.calcularDiasPrestamo());
+        Prestamo prestamo = new Prestamo(material, usuario, hoy, fechaPrevista);
+        historial.add(prestamo);
+        return prestamo;
     }
 
     public ArrayList<Material> getMateriales() {
