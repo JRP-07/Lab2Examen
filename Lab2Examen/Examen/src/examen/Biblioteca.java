@@ -50,6 +50,34 @@ public class Biblioteca {
         return buscarPorTitulo(titulo, indice + 1);
     }
 
+    public ArrayList<Material> buscarPorNivel(NivelComplejidad nivel, int indice) {
+        ArrayList<Material> resultado = new ArrayList<Material>();
+        if (indice >= materiales.size()) {
+            return resultado;
+        }
+        if (materiales.get(indice).getNivel() == nivel) {
+            resultado.add(materiales.get(indice));
+        }
+        resultado.addAll(buscarPorNivel(nivel, indice + 1));
+        return resultado;
+    }
+
+    public ArrayList<Material> buscarDisponiblesDeAutor(String autor, int indice) {
+        ArrayList<Material> resultado = new ArrayList<Material>();
+        if (indice >= materiales.size()) {
+            return resultado;
+        }
+        Material actual = materiales.get(indice);
+        if (actual instanceof Libro) {
+            Libro libro = (Libro) actual;
+            if (libro.getAutor().equalsIgnoreCase(autor) && libro.estaDisponible()) {
+                resultado.add(libro);
+            }
+        }
+        resultado.addAll(buscarDisponiblesDeAutor(autor, indice + 1));
+        return resultado;
+    }
+
     public ArrayList<Material> getMateriales() {
         return materiales;
     }
