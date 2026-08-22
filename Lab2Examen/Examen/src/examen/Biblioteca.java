@@ -2,6 +2,7 @@ package examen;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Biblioteca {
     private ArrayList<Material> materiales;
@@ -151,6 +152,36 @@ public class Biblioteca {
             }
         }
         return null;
+    }
+
+    public <T extends Material> ArrayList<T> filtrarPorTipo(Class<T> tipo) {
+        ArrayList<T> resultado = new ArrayList<T>();
+        for (int i = 0; i < materiales.size(); i++) {
+            if (tipo.isInstance(materiales.get(i))) {
+                resultado.add(tipo.cast(materiales.get(i)));
+            }
+        }
+        return resultado;
+    }
+
+    public ArrayList<Material> ordenarPorTitulo() {
+        ArrayList<Material> copia = new ArrayList<Material>(materiales);
+        Collections.sort(copia);
+        return copia;
+    }
+
+    public ArrayList<Material> ordenarPorComplejidad() {
+        ArrayList<Material> copia = new ArrayList<Material>(materiales);
+        Collections.sort(copia, new ComparadorPorComplejidad());
+        return copia;
+    }
+
+    public ArrayList<Prestable> listarPrestables() {
+        ArrayList<Prestable> resultado = new ArrayList<Prestable>();
+        for (int i = 0; i < materiales.size(); i++) {
+            resultado.add(materiales.get(i));
+        }
+        return resultado;
     }
 
     public ArrayList<Material> getMateriales() {
