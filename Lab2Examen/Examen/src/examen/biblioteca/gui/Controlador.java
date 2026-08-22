@@ -16,6 +16,7 @@ import modelo.Material;
 import modelo.NivelComplejidad;
 import modelo.Prestable;
 import servicio.Biblioteca;
+import examen.Biblioteca;
 import usuarios.Prestamo;
 import usuarios.Usuario;
 
