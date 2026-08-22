@@ -199,6 +199,37 @@ public class Biblioteca {
         return resultado;
     }
 
+    public void aplicarPenalizaciones(LocalDate referencia) {
+        ArrayList<Prestamo> vencidos = SeguimientoPrestamos.vencidosPendientes(historial, referencia);
+        for (int i = 0; i < vencidos.size(); i++) {
+            Prestamo p = vencidos.get(i);
+            int diasRetraso = (int) p.getDiasRetraso(referencia);
+            p.getUsuario().aplicarPenalizacion(referencia, diasRetraso);
+        }
+    }
+
+    public int consultarPenalizacion(String idUsuario, LocalDate referencia) {
+        Usuario usuario = buscarUsuarioPorId(idUsuario);
+        if (usuario == null) {
+            return 0;
+        }
+        ArrayList<Prestamo> prestamosDelUsuario = new ArrayList<Prestamo>();
+        for (int i = 0; i < historial.size(); i++) {
+            if (historial.get(i).getUsuario() == usuario) {
+                prestamosDelUsuario.add(historial.get(i));
+            }
+        }
+        return CalculadoraPenalizaciones.calcularPenalizacionAcumulada(prestamosDelUsuario, 0, referencia);
+    }
+
+    public ArrayList<Prestamo> proximosAVencer(LocalDate referencia, int dias) {
+        return SeguimientoPrestamos.proximosAVencer(historial, referencia, dias);
+    }
+
+    public ArrayList<Prestamo> vencidosPendientes(LocalDate referencia) {
+        return SeguimientoPrestamos.vencidosPendientes(historial, referencia);
+    }
+
     public ArrayList<Material> getMateriales() {
         return materiales;
     }
