@@ -5,13 +5,8 @@ public class Libro extends Material{
     private int nPaginas;
     private String ISBN;
 
-<<<<<<< HEAD
     public Libro(String codigo, String titulo, int dia, NivelComplejidad nivel, String rutaI, String autor, int numeroP, String ISBN){
         super(codigo, titulo, dia, nivel, rutaI);
-=======
-    public Libro(String codigo, String titulo, int dia, NivelComplejidad nivel, String ruta, String autor, int numeroP, String ISBN){
-        super(codigo, titulo, dia, nivel, ruta);
->>>>>>> 584eb2e7507cd556eb3f39567e3f968d42b38fc7
         this.autor=autor;
         this.nPaginas=numeroP;
         this.ISBN=ISBN;
