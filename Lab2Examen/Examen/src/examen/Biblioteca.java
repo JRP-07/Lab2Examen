@@ -232,6 +232,47 @@ public class Biblioteca {
         return SeguimientoPrestamos.vencidosPendientes(historial, referencia);
     }
 
+    public ArrayList<Material> masSolicitados() {
+        int[] conteos = new int[materiales.size()];
+        for (int i = 0; i < materiales.size(); i++) {
+            int conteo = 0;
+            for (int j = 0; j < historial.size(); j++) {
+                if (historial.get(j).getMaterial() == materiales.get(i)) {
+                    conteo++;
+                }
+            }
+            conteos[i] = conteo;
+        }
+
+        ArrayList<Material> copia = new ArrayList<Material>(materiales);
+        int[] copiaConteos = conteos.clone();
+        for (int i = 0; i < copiaConteos.length - 1; i++) {
+            int indiceMayor = i;
+            for (int j = i + 1; j < copiaConteos.length; j++) {
+                if (copiaConteos[j] > copiaConteos[indiceMayor]) {
+                    indiceMayor = j;
+                }
+            }
+            int conteoTemp = copiaConteos[i];
+            copiaConteos[i] = copiaConteos[indiceMayor];
+            copiaConteos[indiceMayor] = conteoTemp;
+
+            Material materialTemp = copia.get(i);
+            copia.set(i, copia.get(indiceMayor));
+            copia.set(indiceMayor, materialTemp);
+        }
+        return copia;
+    }
+
+    public ArrayList<String> recorridoPolimorfico() {
+        ArrayList<String> resultado = new ArrayList<String>();
+        for (int i = 0; i < materiales.size(); i++) {
+            Material m = materiales.get(i);
+            resultado.add(m.getDescripcion() + " -- dias de prestamo: " + m.calcularDiasPrestamo());
+        }
+        return resultado;
+    }
+
     public ArrayList<Material> getMateriales() {
         return materiales;
     }

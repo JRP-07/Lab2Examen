@@ -16,12 +16,12 @@ import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import exmaen.excepciones.AutorizacionRequeridaException;
-import examen.excepciones.LimitePrestamosException;
-import examen.excepciones.MaterialNoDisponibleException;
-import examen.excepciones.UsuarioPenalizadoException;
-import examen.excepciones.BibliotecaException;
-import examen.usuarios.Prestamo;
+import excepciones.AutorizacionRequeridaException;
+import excepciones.LimitePrestamosException;
+import excepciones.MaterialNoDisponibleException;
+import excepciones.UsuarioPenalizadoException;
+import excepciones.BibliotecaException;
+import usuarios.Prestamo;
 
 public class PanelPrestamos extends JPanel {
 

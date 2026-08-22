@@ -16,9 +16,9 @@ import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.util.Calendar;
-import examen.usuarios.Usuario;
-import examen.usuarios.UsuarioEstandar;
-import examen.usuarios.UsuarioPremium;
+import usuarios.Usuario;
+import usuarios.UsuarioEstandar;
+import usuarios.UsuarioPremium;
 
 public class PanelUsuarios extends JPanel{
     private Controlador controlador;

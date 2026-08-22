@@ -8,14 +8,14 @@ package examen.biblioteca.gui;
  *
  * @author gabri
  */
-import examen.modelo.Audiovisual;
-import examen.modelo.Libro;
-import examen.modelo.NivelComplejidad;
-import examen.modelo.Periodicidad;
-import examen.modelo.Revista;
+import modelo.Audiovisual;
+import modelo.Libro;
+import modelo.NivelComplejidad;
+import modelo.Periodicidad;
+import modelo.Revista;
 
-import examen.usuarios.UsuarioEstandar;
-import examen.usuarios.UsuarioPremium;
+import usuarios.UsuarioEstandar;
+import usuarios.UsuarioPremium;
 
 
 public class DatosPrueba {
