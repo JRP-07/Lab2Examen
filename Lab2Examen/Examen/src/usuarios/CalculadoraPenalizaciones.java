@@ -3,8 +3,8 @@
  */
 package usuarios;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -15,16 +15,15 @@ public final class CalculadoraPenalizaciones {
     private CalculadoraPenalizaciones() {
     }
 
-    /*
-     * Caso base: indice llega al final de la lista -> no queda nada por sumar, retorna 0.
-     * Paso recursivo: se suma el retraso del prestamo en indice al resultado de aplicar el
-     * mismo calculo al resto de la lista (indice + 1). Sin bucles for.
-     */
-    public static int calcularPenalizacionAcumulada(List<Prestamo> prestamos, int indice) {
+    public static int calcularPenalizacionAcumulada(ArrayList<Prestamo> prestamos, int indice, Calendar fechaRef) {
         if (indice >= prestamos.size()) {
             return 0;
         }
-        int retraso = prestamos.get(indice).diasRetraso(LocalDate.now());
-        return retraso + calcularPenalizacionAcumulada(prestamos, indice + 1);
+        int retraso = prestamos.get(indice).getDiasRetraso(fechaRef);
+        return retraso + calcularPenalizacionAcumulada(prestamos, indice + 1, fechaRef);
+    }
+
+    public static int calcularPenalizacionAcumulada(ArrayList<Prestamo> prestamos, int indice) {
+        return calcularPenalizacionAcumulada(prestamos, indice, Calendar.getInstance());
     }
 }

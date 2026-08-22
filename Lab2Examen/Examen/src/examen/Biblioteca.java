@@ -1,7 +1,23 @@
 package examen;
 
-import java.time.LocalDate;
+import excepciones.AutorizacionRequeridaException;
+import excepciones.BibliotecaException;
+import excepciones.LimitePrestamosException;
+import excepciones.MaterialNoDisponibleException;
+import excepciones.UsuarioPenalizadoException;
+import modelo.ComparadorPorComplejidad;
+import modelo.EstadoMaterial;
+import modelo.Libro;
+import modelo.Material;
+import modelo.NivelComplejidad;
+import modelo.Prestable;
+import usuarios.CalculadoraPenalizaciones;
+import usuarios.Prestamo;
+import usuarios.SeguimientoPrestamos;
+import usuarios.Usuario;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class Biblioteca {
@@ -57,7 +73,7 @@ public class Biblioteca {
         if (indice >= materiales.size()) {
             return resultado;
         }
-        if (materiales.get(indice).getNivel() == nivel) {
+        if (materiales.get(indice).getNivelC() == nivel) {
             resultado.add(materiales.get(indice));
         }
         resultado.addAll(buscarPorNivel(nivel, indice + 1));
@@ -92,20 +108,21 @@ public class Biblioteca {
         if (!material.estaDisponible()) {
             throw new MaterialNoDisponibleException("El material " + material.getTitulo() + " ya esta prestado");
         }
-        LocalDate hoy = LocalDate.now();
+        Calendar hoy = Calendar.getInstance();
         if (usuario.estaPenalizado(hoy)) {
             throw new UsuarioPenalizadoException(usuario.getNombre() + " esta penalizado hasta " + usuario.getPenalizadoHasta());
         }
         if (usuario.getPrestados().size() >= usuario.getLimitePrestamos()) {
             throw new LimitePrestamosException(usuario.getNombre() + " alcanzo su limite de " + usuario.getLimitePrestamos() + " prestamos");
         }
-        if (!usuario.puedeAccederNivel(material.getNivel())) {
-            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivel());
+        if (!usuario.puedeAccederNivel(material.getNivelC())) {
+            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivelC());
         }
 
         material.prestar();
         usuario.getPrestados().add(material);
-        LocalDate fechaPrevista = hoy.plusDays(material.calcularDiasPrestamo());
+        Calendar fechaPrevista = (Calendar) hoy.clone();
+        fechaPrevista.add(Calendar.DAY_OF_YEAR, material.calcularDiasPrestamo());
         Prestamo prestamo = new Prestamo(material, usuario, hoy, fechaPrevista);
         historial.add(prestamo);
         return prestamo;
@@ -118,7 +135,7 @@ public class Biblioteca {
         }
         Prestamo prestamo = buscarPrestamoActivo(material);
         if (prestamo != null) {
-            prestamo.setFechaDevolucion(LocalDate.now());
+            prestamo.setFechaDevolucion(Calendar.getInstance());
             prestamo.getUsuario().getPrestados().remove(material);
         }
         if (material.tieneReservas()) {
@@ -184,7 +201,7 @@ public class Biblioteca {
         return resultado;
     }
 
-    public void aplicarPenalizaciones(LocalDate referencia) {
+    public void aplicarPenalizaciones(Calendar referencia) {
         ArrayList<Prestamo> vencidos = SeguimientoPrestamos.vencidosPendientes(historial, referencia);
         for (int i = 0; i < vencidos.size(); i++) {
             Prestamo p = vencidos.get(i);
@@ -193,7 +210,7 @@ public class Biblioteca {
         }
     }
 
-    public int consultarPenalizacion(String idUsuario, LocalDate referencia) {
+    public int consultarPenalizacion(String idUsuario, Calendar referencia) {
         Usuario usuario = buscarUsuarioPorId(idUsuario);
         if (usuario == null) {
             return 0;
@@ -207,53 +224,12 @@ public class Biblioteca {
         return CalculadoraPenalizaciones.calcularPenalizacionAcumulada(prestamosDelUsuario, 0, referencia);
     }
 
-    public ArrayList<Prestamo> proximosAVencer(LocalDate referencia, int dias) {
+    public ArrayList<Prestamo> proximosAVencer(Calendar referencia, int dias) {
         return SeguimientoPrestamos.proximosAVencer(historial, referencia, dias);
     }
 
-    public ArrayList<Prestamo> vencidosPendientes(LocalDate referencia) {
+    public ArrayList<Prestamo> vencidosPendientes(Calendar referencia) {
         return SeguimientoPrestamos.vencidosPendientes(historial, referencia);
-    }
-
-    public ArrayList<Material> masSolicitados() {
-        int[] conteos = new int[materiales.size()];
-        for (int i = 0; i < materiales.size(); i++) {
-            int conteo = 0;
-            for (int j = 0; j < historial.size(); j++) {
-                if (historial.get(j).getMaterial() == materiales.get(i)) {
-                    conteo++;
-                }
-            }
-            conteos[i] = conteo;
-        }
-
-        ArrayList<Material> copia = new ArrayList<Material>(materiales);
-        int[] copiaConteos = conteos.clone();
-        for (int i = 0; i < copiaConteos.length - 1; i++) {
-            int indiceMayor = i;
-            for (int j = i + 1; j < copiaConteos.length; j++) {
-                if (copiaConteos[j] > copiaConteos[indiceMayor]) {
-                    indiceMayor = j;
-                }
-            }
-            int conteoTemp = copiaConteos[i];
-            copiaConteos[i] = copiaConteos[indiceMayor];
-            copiaConteos[indiceMayor] = conteoTemp;
-
-            Material materialTemp = copia.get(i);
-            copia.set(i, copia.get(indiceMayor));
-            copia.set(indiceMayor, materialTemp);
-        }
-        return copia;
-    }
-
-    public ArrayList<String> recorridoPolimorfico() {
-        ArrayList<String> resultado = new ArrayList<String>();
-        for (int i = 0; i < materiales.size(); i++) {
-            Material m = materiales.get(i);
-            resultado.add(m.getDescripcion() + " -- dias de prestamo: " + m.calcularDiasPrestamo());
-        }
-        return resultado;
     }
 
     public ArrayList<Material> getMateriales() {
