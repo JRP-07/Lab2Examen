@@ -5,15 +5,18 @@ import excepciones.BibliotecaException;
 import excepciones.LimitePrestamosException;
 import excepciones.MaterialNoDisponibleException;
 import excepciones.UsuarioPenalizadoException;
+import modelo.ComparadorPorComplejidad;
 import modelo.EstadoMaterial;
 import modelo.Libro;
 import modelo.Material;
 import modelo.NivelComplejidad;
+import modelo.Prestable;
 import usuarios.Prestamo;
 import usuarios.Usuario;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Collections;
 
 public class Biblioteca {
