@@ -30,6 +30,26 @@ public class Biblioteca {
         return null;
     }
 
+    public Material buscarPorCodigo(String codigo, int indice) {
+        if (indice >= materiales.size()) {
+            return null;
+        }
+        if (materiales.get(indice).getCodigo().equals(codigo)) {
+            return materiales.get(indice);
+        }
+        return buscarPorCodigo(codigo, indice + 1);
+    }
+
+    public Material buscarPorTitulo(String titulo, int indice) {
+        if (indice >= materiales.size()) {
+            return null;
+        }
+        if (materiales.get(indice).getTitulo().equalsIgnoreCase(titulo)) {
+            return materiales.get(indice);
+        }
+        return buscarPorTitulo(titulo, indice + 1);
+    }
+
     public ArrayList<Material> getMateriales() {
         return materiales;
     }
