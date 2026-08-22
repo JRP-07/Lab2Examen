@@ -110,6 +110,49 @@ public class Biblioteca {
         return prestamo;
     }
 
+    public void devolver(String codigo) throws BibliotecaException {
+        Material material = buscarPorCodigo(codigo, 0);
+        if (material == null) {
+            throw new BibliotecaException("No existe un material con codigo " + codigo);
+        }
+        Prestamo prestamo = buscarPrestamoActivo(material);
+        if (prestamo != null) {
+            prestamo.setFechaDevolucion(LocalDate.now());
+            prestamo.getUsuario().getPrestados().remove(material);
+        }
+        if (material.tieneReservas()) {
+            material.setEstado(EstadoMaterial.RESERVADO);
+            material.getSiguienteReserva();
+        } else {
+            material.devolver();
+        }
+    }
+
+    public void reservar(String idUsuario, String codigo) throws BibliotecaException {
+        Usuario usuario = buscarUsuarioPorId(idUsuario);
+        if (usuario == null) {
+            throw new BibliotecaException("No existe un usuario con id " + idUsuario);
+        }
+        Material material = buscarPorCodigo(codigo, 0);
+        if (material == null) {
+            throw new BibliotecaException("No existe un material con codigo " + codigo);
+        }
+        if (!usuario.puedeReservar()) {
+            throw new BibliotecaException(usuario.getNombre() + " no tiene permiso para reservar materiales");
+        }
+        material.reservar(idUsuario);
+    }
+
+    private Prestamo buscarPrestamoActivo(Material material) {
+        for (int i = 0; i < historial.size(); i++) {
+            Prestamo p = historial.get(i);
+            if (p.getMaterial() == material && p.estaActivo()) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Material> getMateriales() {
         return materiales;
     }
