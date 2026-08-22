@@ -1,22 +1,7 @@
 package examen;
 
-import excepciones.AutorizacionRequeridaException;
-import excepciones.BibliotecaException;
-import excepciones.LimitePrestamosException;
-import excepciones.MaterialNoDisponibleException;
-import excepciones.UsuarioPenalizadoException;
-import modelo.ComparadorPorComplejidad;
-import modelo.EstadoMaterial;
-import modelo.Libro;
-import modelo.Material;
-import modelo.NivelComplejidad;
-import modelo.Prestable;
-import usuarios.Prestamo;
-import usuarios.Usuario;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Collections;
 
 public class Biblioteca {
@@ -72,7 +57,7 @@ public class Biblioteca {
         if (indice >= materiales.size()) {
             return resultado;
         }
-        if (materiales.get(indice).getNivelC() == nivel) {
+        if (materiales.get(indice).getNivel() == nivel) {
             resultado.add(materiales.get(indice));
         }
         resultado.addAll(buscarPorNivel(nivel, indice + 1));
@@ -114,8 +99,8 @@ public class Biblioteca {
         if (usuario.getPrestados().size() >= usuario.getLimitePrestamos()) {
             throw new LimitePrestamosException(usuario.getNombre() + " alcanzo su limite de " + usuario.getLimitePrestamos() + " prestamos");
         }
-        if (!usuario.puedeAccederNivel(material.getNivelC())) {
-            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivelC());
+        if (!usuario.puedeAccederNivel(material.getNivel())) {
+            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivel());
         }
 
         material.prestar();
@@ -228,6 +213,47 @@ public class Biblioteca {
 
     public ArrayList<Prestamo> vencidosPendientes(LocalDate referencia) {
         return SeguimientoPrestamos.vencidosPendientes(historial, referencia);
+    }
+
+    public ArrayList<Material> masSolicitados() {
+        int[] conteos = new int[materiales.size()];
+        for (int i = 0; i < materiales.size(); i++) {
+            int conteo = 0;
+            for (int j = 0; j < historial.size(); j++) {
+                if (historial.get(j).getMaterial() == materiales.get(i)) {
+                    conteo++;
+                }
+            }
+            conteos[i] = conteo;
+        }
+
+        ArrayList<Material> copia = new ArrayList<Material>(materiales);
+        int[] copiaConteos = conteos.clone();
+        for (int i = 0; i < copiaConteos.length - 1; i++) {
+            int indiceMayor = i;
+            for (int j = i + 1; j < copiaConteos.length; j++) {
+                if (copiaConteos[j] > copiaConteos[indiceMayor]) {
+                    indiceMayor = j;
+                }
+            }
+            int conteoTemp = copiaConteos[i];
+            copiaConteos[i] = copiaConteos[indiceMayor];
+            copiaConteos[indiceMayor] = conteoTemp;
+
+            Material materialTemp = copia.get(i);
+            copia.set(i, copia.get(indiceMayor));
+            copia.set(indiceMayor, materialTemp);
+        }
+        return copia;
+    }
+
+    public ArrayList<String> recorridoPolimorfico() {
+        ArrayList<String> resultado = new ArrayList<String>();
+        for (int i = 0; i < materiales.size(); i++) {
+            Material m = materiales.get(i);
+            resultado.add(m.getDescripcion() + " -- dias de prestamo: " + m.calcularDiasPrestamo());
+        }
+        return resultado;
     }
 
     public ArrayList<Material> getMateriales() {
