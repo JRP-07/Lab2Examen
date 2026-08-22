@@ -59,6 +59,13 @@ public abstract class Material implements Prestable, Reservable, Comparable<Mate
             return null;
         return colaReserva.get(0);
     }
+   
+    public String atenderSiguienteReserva() {
+        if (colaReserva.isEmpty()) {
+            return null;
+        }
+        return colaReserva.remove(0);
+    }
 
     public int compareTo(Material otro) {
         return this.titulo.compareTo(otro.titulo);
@@ -95,6 +102,5 @@ public abstract class Material implements Prestable, Reservable, Comparable<Mate
     public ArrayList<String> getColaReserva() {
         return colaReserva;
     }
-
     
 }

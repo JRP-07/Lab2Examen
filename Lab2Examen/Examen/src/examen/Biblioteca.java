@@ -140,7 +140,7 @@ public class Biblioteca {
         }
         if (material.tieneReservas()) {
             material.setEstado(EstadoMaterial.RESERVADO);
-            material.getSiguienteReserva();
+            material.atenderSiguienteReserva();
         } else {
             material.devolver();
         }
