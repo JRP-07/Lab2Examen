@@ -5,24 +5,21 @@ package usuarios;
 
 import modelo.Material;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 
 /**
  *
  * @author mario
  */
-// Orden natural por fechaPrevista: permite ordenar listados de prestamos con
-// Collections.sort() sin necesidad de un comparador aparte.
 public class Prestamo implements Comparable<Prestamo> {
 
     private final Material material;
     private final Usuario usuario;
-    private final LocalDate fechaPrestamo;
-    private final LocalDate fechaPrevista;
-    private LocalDate fechaDevolucion;
+    private final Calendar fechaPrestamo;
+    private final Calendar fechaPrevista;
+    private Calendar fechaDevolucion;
 
-    public Prestamo(Material material, Usuario usuario, LocalDate fechaPrestamo, LocalDate fechaPrevista) {
+    public Prestamo(Material material, Usuario usuario, Calendar fechaPrestamo, Calendar fechaPrevista) {
         this.material = material;
         this.usuario = usuario;
         this.fechaPrestamo = fechaPrestamo;
@@ -33,10 +30,10 @@ public class Prestamo implements Comparable<Prestamo> {
         return fechaDevolucion == null;
     }
 
-    /** Dias de retraso respecto de fechaRef (o de la devolucion real, si ya ocurrio); nunca negativo. */
-    public int diasRetraso(LocalDate fechaRef) {
-        LocalDate fechaComparacion = fechaDevolucion != null ? fechaDevolucion : fechaRef;
-        long dias = ChronoUnit.DAYS.between(fechaPrevista, fechaComparacion);
+    public int getDiasRetraso(Calendar fechaRef) {
+        Calendar fechaComparacion = fechaDevolucion != null ? fechaDevolucion : fechaRef;
+        long milisPorDia = 24L * 60 * 60 * 1000;
+        long dias = (fechaComparacion.getTimeInMillis() - fechaPrevista.getTimeInMillis()) / milisPorDia;
         return (int) Math.max(0, dias);
     }
 
@@ -53,19 +50,19 @@ public class Prestamo implements Comparable<Prestamo> {
         return usuario;
     }
 
-    public LocalDate getFechaPrestamo() {
+    public Calendar getFechaPrestamo() {
         return fechaPrestamo;
     }
 
-    public LocalDate getFechaPrevista() {
+    public Calendar getFechaPrevista() {
         return fechaPrevista;
     }
 
-    public LocalDate getFechaDevolucion() {
+    public Calendar getFechaDevolucion() {
         return fechaDevolucion;
     }
 
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+    public void setFechaDevolucion(Calendar fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
 }

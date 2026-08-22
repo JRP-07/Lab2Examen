@@ -3,31 +3,27 @@
  */
 package usuarios;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.List;
 
 /**
  *
  * @author mario
  */
-// Metodos estaticos que reciben el historial de prestamos como parametro y devuelven listados
-// ya filtrados y ordenados. No conocen ninguna clase de servicio: eso permite probar este
-// punto con un main propio antes de que el resto del proyecto exista.
 public final class SeguimientoPrestamos {
 
     private SeguimientoPrestamos() {
     }
 
-    /** Prestamos activos cuya fechaPrevista cae entre fechaRef y fechaRef + diasMargen (hacia adelante). */
-    public static List<Prestamo> proximosAVencer(List<Prestamo> prestamos, LocalDate fechaRef, int diasMargen) {
-        LocalDate limite = fechaRef.plusDays(diasMargen);
-        List<Prestamo> resultado = new ArrayList<>();
+    public static ArrayList<Prestamo> proximosAVencer(ArrayList<Prestamo> prestamos, Calendar fechaRef, int diasMargen) {
+        Calendar limite = (Calendar) fechaRef.clone();
+        limite.add(Calendar.DAY_OF_YEAR, diasMargen);
+        ArrayList<Prestamo> resultado = new ArrayList<>();
         for (Prestamo p : prestamos) {
             if (p.estaActivo()
-                    && !p.getFechaPrevista().isBefore(fechaRef)
-                    && !p.getFechaPrevista().isAfter(limite)) {
+                    && !p.getFechaPrevista().before(fechaRef)
+                    && !p.getFechaPrevista().after(limite)) {
                 resultado.add(p);
             }
         }
@@ -35,11 +31,10 @@ public final class SeguimientoPrestamos {
         return resultado;
     }
 
-    /** Prestamos activos cuya fechaPrevista ya paso respecto de fechaRef, sin devolucion (hacia atras). */
-    public static List<Prestamo> vencidosPendientes(List<Prestamo> prestamos, LocalDate fechaRef) {
-        List<Prestamo> resultado = new ArrayList<>();
+    public static ArrayList<Prestamo> vencidosPendientes(ArrayList<Prestamo> prestamos, Calendar fechaRef) {
+        ArrayList<Prestamo> resultado = new ArrayList<>();
         for (Prestamo p : prestamos) {
-            if (p.estaActivo() && p.getFechaPrevista().isBefore(fechaRef)) {
+            if (p.estaActivo() && p.getFechaPrevista().before(fechaRef)) {
                 resultado.add(p);
             }
         }

@@ -6,24 +6,20 @@ package usuarios;
 import modelo.Material;
 import modelo.NivelComplejidad;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
 import java.util.Objects;
 
 /**
  *
  * @author mario
  */
-// Polimorfismo en tiempo de ejecucion: getLimitePrestamos(), puedeAccederNivel() y
-// puedeReservar() son abstractos aqui y cada subclase (UsuarioEstandar/UsuarioPremium) los
-// sobrescribe con su propio comportamiento, en lugar de guardarlos como un atributo distinto.
 public abstract class Usuario {
 
     private final String id;
     private String nombre;
-    private final List<Material> prestados = new ArrayList<>();
-    private LocalDate penalizadoHasta;
+    private final ArrayList<Material> prestados = new ArrayList<>();
+    private Calendar penalizadoHasta;
 
     protected Usuario(String id, String nombre) {
         this.id = id;
@@ -36,8 +32,14 @@ public abstract class Usuario {
 
     public abstract boolean puedeReservar();
 
-    public boolean estaPenalizado(LocalDate fechaRef) {
-        return penalizadoHasta != null && penalizadoHasta.isAfter(fechaRef);
+    public boolean estaPenalizado(Calendar fechaRef) {
+        return penalizadoHasta != null && penalizadoHasta.after(fechaRef);
+    }
+
+    public void aplicarPenalizacion(Calendar referencia, int diasRetraso) {
+        Calendar nuevaFecha = (Calendar) referencia.clone();
+        nuevaFecha.add(Calendar.DAY_OF_YEAR, diasRetraso);
+        this.penalizadoHasta = nuevaFecha;
     }
 
     public String getId() {
@@ -52,15 +54,15 @@ public abstract class Usuario {
         this.nombre = nombre;
     }
 
-    public List<Material> getPrestados() {
+    public ArrayList<Material> getPrestados() {
         return prestados;
     }
 
-    public LocalDate getPenalizadoHasta() {
+    public Calendar getPenalizadoHasta() {
         return penalizadoHasta;
     }
 
-    public void setPenalizadoHasta(LocalDate penalizadoHasta) {
+    public void setPenalizadoHasta(Calendar penalizadoHasta) {
         this.penalizadoHasta = penalizadoHasta;
     }
 

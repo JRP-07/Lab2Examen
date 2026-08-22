@@ -11,12 +11,13 @@ import modelo.Libro;
 import modelo.Material;
 import modelo.NivelComplejidad;
 import modelo.Prestable;
+import usuarios.CalculadoraPenalizaciones;
 import usuarios.Prestamo;
+import usuarios.SeguimientoPrestamos;
 import usuarios.Usuario;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class Biblioteca {
@@ -107,7 +108,7 @@ public class Biblioteca {
         if (!material.estaDisponible()) {
             throw new MaterialNoDisponibleException("El material " + material.getTitulo() + " ya esta prestado");
         }
-        LocalDate hoy = LocalDate.now();
+        Calendar hoy = Calendar.getInstance();
         if (usuario.estaPenalizado(hoy)) {
             throw new UsuarioPenalizadoException(usuario.getNombre() + " esta penalizado hasta " + usuario.getPenalizadoHasta());
         }
@@ -120,7 +121,8 @@ public class Biblioteca {
 
         material.prestar();
         usuario.getPrestados().add(material);
-        LocalDate fechaPrevista = hoy.plusDays(material.calcularDiasPrestamo());
+        Calendar fechaPrevista = (Calendar) hoy.clone();
+        fechaPrevista.add(Calendar.DAY_OF_YEAR, material.calcularDiasPrestamo());
         Prestamo prestamo = new Prestamo(material, usuario, hoy, fechaPrevista);
         historial.add(prestamo);
         return prestamo;
@@ -133,7 +135,7 @@ public class Biblioteca {
         }
         Prestamo prestamo = buscarPrestamoActivo(material);
         if (prestamo != null) {
-            prestamo.setFechaDevolucion(LocalDate.now());
+            prestamo.setFechaDevolucion(Calendar.getInstance());
             prestamo.getUsuario().getPrestados().remove(material);
         }
         if (material.tieneReservas()) {
@@ -199,7 +201,7 @@ public class Biblioteca {
         return resultado;
     }
 
-    public void aplicarPenalizaciones(LocalDate referencia) {
+    public void aplicarPenalizaciones(Calendar referencia) {
         ArrayList<Prestamo> vencidos = SeguimientoPrestamos.vencidosPendientes(historial, referencia);
         for (int i = 0; i < vencidos.size(); i++) {
             Prestamo p = vencidos.get(i);
@@ -208,7 +210,7 @@ public class Biblioteca {
         }
     }
 
-    public int consultarPenalizacion(String idUsuario, LocalDate referencia) {
+    public int consultarPenalizacion(String idUsuario, Calendar referencia) {
         Usuario usuario = buscarUsuarioPorId(idUsuario);
         if (usuario == null) {
             return 0;
@@ -222,11 +224,11 @@ public class Biblioteca {
         return CalculadoraPenalizaciones.calcularPenalizacionAcumulada(prestamosDelUsuario, 0, referencia);
     }
 
-    public ArrayList<Prestamo> proximosAVencer(LocalDate referencia, int dias) {
+    public ArrayList<Prestamo> proximosAVencer(Calendar referencia, int dias) {
         return SeguimientoPrestamos.proximosAVencer(historial, referencia, dias);
     }
 
-    public ArrayList<Prestamo> vencidosPendientes(LocalDate referencia) {
+    public ArrayList<Prestamo> vencidosPendientes(Calendar referencia) {
         return SeguimientoPrestamos.vencidosPendientes(historial, referencia);
     }
 
