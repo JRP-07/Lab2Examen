@@ -1,7 +1,22 @@
 package examen;
 
+import excepciones.AutorizacionRequeridaException;
+import excepciones.BibliotecaException;
+import excepciones.LimitePrestamosException;
+import excepciones.MaterialNoDisponibleException;
+import excepciones.UsuarioPenalizadoException;
+import modelo.ComparadorPorComplejidad;
+import modelo.EstadoMaterial;
+import modelo.Libro;
+import modelo.Material;
+import modelo.NivelComplejidad;
+import modelo.Prestable;
+import usuarios.Prestamo;
+import usuarios.Usuario;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Collections;
 
 public class Biblioteca {
@@ -57,7 +72,7 @@ public class Biblioteca {
         if (indice >= materiales.size()) {
             return resultado;
         }
-        if (materiales.get(indice).getNivel() == nivel) {
+        if (materiales.get(indice).getNivelC() == nivel) {
             resultado.add(materiales.get(indice));
         }
         resultado.addAll(buscarPorNivel(nivel, indice + 1));
@@ -99,8 +114,8 @@ public class Biblioteca {
         if (usuario.getPrestados().size() >= usuario.getLimitePrestamos()) {
             throw new LimitePrestamosException(usuario.getNombre() + " alcanzo su limite de " + usuario.getLimitePrestamos() + " prestamos");
         }
-        if (!usuario.puedeAccederNivel(material.getNivel())) {
-            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivel());
+        if (!usuario.puedeAccederNivel(material.getNivelC())) {
+            throw new AutorizacionRequeridaException(usuario.getNombre() + " no tiene autorizacion para el nivel " + material.getNivelC());
         }
 
         material.prestar();

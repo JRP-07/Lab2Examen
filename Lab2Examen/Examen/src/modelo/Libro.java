@@ -25,4 +25,8 @@ public class Libro extends Material{
         }
         return diasM + extra + nivelC.getDiasExtra();
     }
+
+    public String getAutor(){
+        return autor;
+    }
 }
