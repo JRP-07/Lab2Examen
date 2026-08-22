@@ -8,29 +8,31 @@ package examen.biblioteca.gui;
  *
  * @author gabri
  */
-import examen.modelo.Audiovisual;
-import examen.modelo.Libro;
-import examen.modelo.NivelComplejidad;
-import examen.modelo.Periodicidad;
-import examen.modelo.Revista;
+import modelo.Audiovisual;
+import modelo.Libro;
+import modelo.NivelComplejidad;
+import modelo.Periodicidad;
+import modelo.Revista;
 
-import examen.usuarios.UsuarioEstandar;
-import examen.usuarios.UsuarioPremium;
+import usuarios.UsuarioEstandar;
+import usuarios.UsuarioPremium;
 
 
 public class DatosPrueba {
     public static void cargar(Controlador controlador) {
+        //Libro(String codigo, String titulo, int dia, NivelComplejidad nivel, String rutaI, String autor, int numeroP, String ISBN){
+        Libro libro1 = new Libro("L001", "Ciencia Avanzada",5, NivelComplejidad.ALTO,"recursos/libro_alto.jpg", "John Smith", 1000, "978-0123456789");
+        Libro libro2 = new Libro("L002", "Cuentos para Ninos",10, NivelComplejidad.BAJO,"recursos/libro_bajo.jpg", "Maria Garcia", 20, "978-9876543210");
+        Libro libro3 = new Libro("L003", "Estudios Basicos",4, NivelComplejidad.MEDIO, "recursos/Libro_medio.jpg","Roberto Martin", 300, "978-2468013579");
+        Libro libro4 = new Libro("L004", "Programacion 2",2, NivelComplejidad.ALTO,"recursos/rutaParaProbarSinPortada.jpg", "Erick Amaya", 500, "978-0000000000");
+    
+        //public Revista(String codigo, String titulo, int dias, NivelComplejidad nivel, String rutaI, int numeroEdicion, Periodicidad periodo) {
+        Revista revista1 = new Revista("R001", "M Magazine",2, NivelComplejidad.BAJO, "recursos/revista_mensual.jpg",50, Periodicidad.MENSUAL);
+        Revista revista2 = new Revista("R002", "Tecnologia Revolucionaria y Cultura Urbana",  5,NivelComplejidad.MEDIO, "recursos/revista_semanal.jpg",12, Periodicidad.SEMANAL);
 
-        Libro libro1 = new Libro("L001", "Ciencia Avanzada", "recursos/libro_alto.jpg",NivelComplejidad.ALTO, "John Smith", 1000, "978-0123456789");
-        Libro libro2 = new Libro("L002", "Cuentos para Ninos", "recursos/libro_bajo.jpg", NivelComplejidad.BAJO, "Maria Garcia", 20, "978-9876543210");
-        Libro libro3 = new Libro("L003", "Estudios Basicos", "recursos/Libro_medio.jpg",NivelComplejidad.MEDIO, "Robert C. Martin", 300, "978-2468013579");
-        Libro libro4 = new Libro("L004", "Programacion 2", "recursos/rutaParaProbarSinPortada.jpg", NivelComplejidad.ALTO, "Erick Amaya", 500, "978-0000000000");
-
-        Revista revista1 = new Revista("R001", "M Magazine", "recursos/revista_mensual.jpg",NivelComplejidad.BAJO, 100, Periodicidad.MENSUAL);
-        Revista revista2 = new Revista("R002", "Tecnologia Revolucionaria y Cultura Urbana", "recursos/revista_semanal.jpg",NivelComplejidad.MEDIO, 12, Periodicidad.SEMANAL);
-
-        Audiovisual audiovisual1 = new Audiovisual("A001", "Celestial Nexus", "recursos/Bluray_generico.jpg",NivelComplejidad.MEDIO, 120, "Blu-ray");
-        Audiovisual audiovisual2 = new Audiovisual("A002", "Silhouette", "recursos/DVD_generico.jpg",NivelComplejidad.ALTO, 95, "DVD");
+        //public Audiovisual(String codigo, String titulo, int diasBasePrestamo, NivelComplejidad nivel, String rutaI,int duracion, String formato)
+        Audiovisual audiovisual1 = new Audiovisual("A001", "Celestial Nexus", 4 ,NivelComplejidad.MEDIO, "recursos/Bluray_generico.jpg",120, "Blu-ray");
+        Audiovisual audiovisual2 = new Audiovisual("A002", "Silhouette",2 ,NivelComplejidad.ALTO, "recursos/DVD_generico.jpg",95, "DVD");
         
         controlador.agregarMaterial(libro1);
         controlador.agregarMaterial(libro2);

@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import examen.usuarios.Prestamo;
+import usuarios.Prestamo;
 
 public class PanelSeguimiento extends JPanel {
 

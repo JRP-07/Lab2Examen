@@ -12,12 +12,12 @@ package examen.biblioteca.gui;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import examen.modelo.Material;
-import examen.modelo.NivelComplejidad;
-import examen.modelo.Prestable;
-import examen.servicio.Biblioteca;
-import examen.usuarios.Prestamo;
-import examen.usuarios.Usuario;
+import modelo.Material;
+import modelo.NivelComplejidad;
+import modelo.Prestable;
+import servicio.Biblioteca;
+import usuarios.Prestamo;
+import usuarios.Usuario;
 
 public class Controlador {
 

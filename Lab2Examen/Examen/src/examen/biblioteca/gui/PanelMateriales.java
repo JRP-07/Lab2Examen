@@ -17,12 +17,12 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import examen.modelo.Audiovisual;
-import examen.modelo.Libro;
-import examen.modelo.Material;
-import examen.modelo.NivelComplejidad;
-import examen.modelo.Periodicidad;
-import examen.modelo.Revista;
+import modelo.Audiovisual;
+import modelo.Libro;
+import modelo.Material;
+import modelo.NivelComplejidad;
+import modelo.Periodicidad;
+import modelo.Revista;
 
 public class PanelMateriales extends JPanel{
 
