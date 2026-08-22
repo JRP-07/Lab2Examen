@@ -15,8 +15,11 @@ import java.util.Calendar;
 import modelo.Material;
 import modelo.NivelComplejidad;
 import modelo.Prestable;
-import servicio.Biblioteca;
+import modelo.Libro;
+import modelo.Revista;
+import modelo.Audiovisual;
 import examen.Biblioteca;
+import excepciones.BibliotecaException;
 import usuarios.Prestamo;
 import usuarios.Usuario;
 

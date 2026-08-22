@@ -178,14 +178,14 @@ public class PanelMateriales extends JPanel{
         try {
             if (tipo.equals("Libro")) {
                 int paginas = Integer.parseInt(campoPaginas.getText().trim());
-                nuevo = new Libro(codigo, titulo, ruta, nivel, campoAutor.getText().trim(), paginas, campoIsbn.getText().trim());
+                nuevo = new Libro(codigo, titulo, 14, nivel, ruta, campoAutor.getText().trim(), paginas, campoIsbn.getText().trim());
             } else if (tipo.equals("Revista")) {
                 int edicion = Integer.parseInt(campoEdicion.getText().trim());
                 Periodicidad periodicidad = (Periodicidad) comboPeriodicidad.getSelectedItem();
-                nuevo = new Revista(codigo, titulo, ruta, nivel, edicion, periodicidad);
+                nuevo = new Revista(codigo, titulo, 5, nivel, ruta, edicion, periodicidad);
             } else {
                 int duracion = Integer.parseInt(campoDuracion.getText().trim());
-                nuevo = new Audiovisual(codigo, titulo, ruta, nivel, duracion, campoFormato.getText().trim());
+                nuevo = new Audiovisual(codigo, titulo, 3, nivel, ruta, duracion, campoFormato.getText().trim());
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Los campos numericos deben contener numeros validos", "Dato invalido", JOptionPane.ERROR_MESSAGE);
@@ -348,14 +348,14 @@ public class PanelMateriales extends JPanel{
             etiquetaNivel.setBackground(this.getBackground());
             return;
         }
-        etiquetaImagen.setIcon(UtilImagen.cargar(m.getRutaImagen(), 150, 210));
+        etiquetaImagen.setIcon(UtilImagen.cargar(m.getRefImagen(), 150, 210));
         etiquetaDetalle.setText("<html><body style='width:180px'>" + m.getDescripcion()
                 + "<br><br>Estado: " + m.getEstado()
                 + "<br>Dias de prestamo: " + m.calcularDiasPrestamo()
                 + "<br>Reservas pendientes: " + (m.tieneReservas() ? "si" : "no")
                 + "</body></html>");
 
-        NivelComplejidad nivel = m.getNivel();
+        NivelComplejidad nivel = m.getNivelC();
         etiquetaNivel.setText(nivel.name() + " (" + nivel.getDescripcion() + ")");
         if (nivel == NivelComplejidad.BAJO) {
             etiquetaNivel.setBackground(new Color(150, 220, 150));
